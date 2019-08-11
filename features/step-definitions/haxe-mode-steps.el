@@ -19,13 +19,21 @@
   (lambda (command)
     (call-interactively (intern command))))
 
-(When (rx bol (group (*? anything)) (? " ") "at "
-          (group (or "point" "line")) " "
+(When "^I indent$" 'haxe-indent-line)
+
+(When (rx bol (group (*? any)) (? " ") "at "
+          (group (or "point" "line" "column")) " "
           (group (+ digit)) eol)
-  (lambda (step kind line)
-    (if (equal "point" kind)
-        (goto-char (string-to-number line))
-      (goto-line (string-to-number line)))
+  (lambda (step kind value)
+    (let ((inhibit-message t))
+      (pcase kind
+        ("point"
+         (goto-char (string-to-number value)))
+        ("column"
+         (beginning-of-line)
+         (right-char (string-to-number value)))
+        ("line"
+         (goto-line (string-to-number value)))))
     (unless (s-blank? step)
       (When step))))
 
@@ -33,7 +41,19 @@
   (lambda (body)
     (should (equal body (buffer-string)))))
 
-(Then (rx "expect " (group "font-lock-" (+ anything)) eol)
+(Then (rx "expect " (group "font-lock-" (+ any)) eol)
   (lambda (font-face)
     (font-lock-fontify-buffer)
     (should (equal font-face (symbol-name (get-text-property (point) 'face))))))
+
+(Then (rx "expect " (group (or "point" "column" "indent" "line")) (or " at " " to ") (group (+ digit)))
+  (lambda (kind value)
+    (pcase kind
+      ("point"
+       (should (equal (string-to-number value) (point))))
+      ("column"
+       (should (equal (string-to-number value) (current-column))))
+      ("indent"
+       (should (equal (string-to-number value) (current-indentation))))
+      ("line"
+       (should (equal (string-to-number value) (line-number-at-pos)))))))
