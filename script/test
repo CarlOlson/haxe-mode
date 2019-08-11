@@ -2,4 +2,4 @@
 
 cd $(dirname $0)/..
 
-cask exec ecukes
+cask exec ecukes -t 0.1 $@
