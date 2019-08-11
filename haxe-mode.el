@@ -39,13 +39,33 @@
       (,type-regexp . font-lock-type-face)))
   "Font lock configuration for haxe-mode.")
 
+(defconst haxe-mode-indent-level 2
+  "Number of spaces per indent level for haxe-mode.")
+
 (define-derived-mode haxe-mode prog-mode "Haxe"
   "A major mode for editing Haxe files."
   :syntax-table haxe-mode-syntax-table
   (setq-local comment-start "// ")
   (setq-local comment-start-skip (rx "//" (* (or "//" whitespace))))
-  (setq-local font-lock-defaults '((haxe-mode-font-lock-keywords)))
+  (setq-local indent-line-function 'haxe-indent-line)
+  (setq-local font-lock-defaults '(haxe-mode-font-lock-keywords))
   (font-lock-fontify-buffer))
+
+(defun haxe-indent-line ()
+  "Indent current line of Sample code."
+  (interactive)
+  (save-excursion
+    (back-to-indentation)
+    (unless (haxe-comment-or-string)
+      (indent-line-to (* haxe-mode-indent-level
+                         (+ (syntax-ppss-depth (syntax-ppss))
+                            (if (looking-at (rx "}")) -1 0))))))
+  (when (> (current-indentation) (current-column))
+    (move-to-column (current-indentation))))
+
+(defun haxe-comment-or-string ()
+  "Is point in a comment or string?"
+  (member (syntax-ppss-context (syntax-ppss)) '(comment string)))
 
 (provide 'haxe-mode)
 
