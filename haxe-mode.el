@@ -39,14 +39,6 @@
       (,type-regexp . font-lock-type-face)))
   "Font lock configuration for haxe-mode.")
 
-(defconst haxe-mode-keywords
-  '(abstract break case cast catch class continue default do
-             dynamic else enum extends extern false final for function if
-             implements import in inline interface macro new null operator
-             overload override package private public return static switch
-             this throw true try typedef untyped using var while)
-  "Keywords for haxe-mode.")
-
 (define-derived-mode haxe-mode prog-mode "Haxe"
   "A major mode for editing Haxe files."
   :syntax-table haxe-mode-syntax-table

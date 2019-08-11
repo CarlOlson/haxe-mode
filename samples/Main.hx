@@ -1,6 +1,8 @@
+package;
+
 // a comment
 
-package;
+import hx.sys;
 
 /* another
  * comment
@@ -8,16 +10,13 @@ package;
 
 @:allow(MainTest)
 class Main {
-
-  var name:String;
+  var single:String = 'single';
+  var double:String = "double";
+  var regexp:EReg   = ~/world/;
 
   function main():Void {
-    name = "carl" + 'olson';
-
-    var regexp:EReg = ~/world/;
-
     #if debug
-    trace("hello");
+    trace("hello, world");
     #end
 
     var map = [1 => 101, 2 => 102, 3 => 103];
@@ -25,5 +24,4 @@ class Main {
       trace(key, value);
     }
   }
-
 }
