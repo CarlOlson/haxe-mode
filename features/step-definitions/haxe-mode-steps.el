@@ -2,27 +2,28 @@
 ;; files in this directory whose names end with "-steps.el" will be
 ;; loaded automatically by Ecukes.
 
-(Given "^I have \"\\(.+\\)\"$"
-  (lambda (something)
-    ;; ...
-    ))
+(Given "^I am in a haxe buffer$"
+  (lambda ()
+    (let ((buffer-name "haxe.hx"))
+      (when (get-buffer buffer-name)
+        (kill-buffer buffer-name))
+      (switch-to-buffer
+       (get-buffer-create buffer-name))
+      (haxe-mode))))
 
-(When "^I have \"\\(.+\\)\"$"
-  (lambda (something)
-    ;; ...
-    ))
+(And "^I insert$"
+  (lambda (body)
+    (insert body)))
 
-(Then "^I should have \"\\(.+\\)\"$"
-  (lambda (something)
-    ;; ...
-    ))
+(When (rx "I '" (group (+ (or alphanumeric "-"))))
+  (lambda (command)
+    (call-interactively (intern command))))
 
-(And "^I have \"\\(.+\\)\"$"
-  (lambda (something)
-    ;; ...
-    ))
+(When (rx bol (group (* anything)) " at line " (group (+ digit)) eol)
+  (lambda (step line)
+    (goto-line (string-to-number line))
+    (When step)))
 
-(But "^I should not have \"\\(.+\\)\"$"
-  (lambda (something)
-    ;; ...
-    ))
+(Then "^I should have$"
+  (lambda (body)
+    (should (s-equals? body (buffer-string)))))
