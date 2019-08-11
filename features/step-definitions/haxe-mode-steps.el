@@ -19,11 +19,21 @@
   (lambda (command)
     (call-interactively (intern command))))
 
-(When (rx bol (group (* anything)) " at line " (group (+ digit)) eol)
-  (lambda (step line)
-    (goto-line (string-to-number line))
-    (When step)))
+(When (rx bol (group (*? anything)) (? " ") "at "
+          (group (or "point" "line")) " "
+          (group (+ digit)) eol)
+  (lambda (step kind line)
+    (if (equal "point" kind)
+        (goto-char (string-to-number line))
+      (goto-line (string-to-number line)))
+    (unless (s-blank? step)
+      (When step))))
 
 (Then "^I should have$"
   (lambda (body)
-    (should (s-equals? body (buffer-string)))))
+    (should (equal body (buffer-string)))))
+
+(Then (rx "expect " (group "font-lock-" (+ anything)) eol)
+  (lambda (font-face)
+    (font-lock-fontify-buffer)
+    (should (equal font-face (symbol-name (get-text-property (point) 'face))))))
