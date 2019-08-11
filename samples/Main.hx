@@ -6,9 +6,10 @@ package;
  * comment
  */
 
+@:allow(MainTest)
 class Main {
 
-  var name: String;
+  var name:String;
 
   function main():Void {
     name = "carl" + 'olson';
