@@ -97,7 +97,14 @@
   (setq-local indent-line-function #'haxe-indent-line)
   (setq-local font-lock-defaults '(haxe-mode-font-lock-keywords))
   (setq-local indent-tabs-mode haxe-mode-indent-tabs-mode)
-  (setq-local tab-width haxe-mode-indent-level))
+  (setq-local tab-width haxe-mode-indent-level)
+  (setq-local syntax-propertize-function
+              (syntax-propertize-rules
+               ((rx "~"
+                    (group "/")
+                    (or "" (and (*? anything) (not (syntax escape))))
+                    (group "/"))
+                (1 "|") (2 "|")))))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist `(,(rx ".hx" eol) . haxe-mode))
