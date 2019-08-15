@@ -46,14 +46,23 @@
     (font-lock-fontify-buffer)
     (should (equal font-face (symbol-name (get-text-property (point) 'face))))))
 
-(Then (rx "expect " (group (or "point" "column" "indent" "line")) (or " at " " to ") (group (+ digit)))
+(Then (rx "expect " (group (or "point" "column" "line")) (or " at " " to ") (group (+ digit)))
   (lambda (kind value)
     (pcase kind
       ("point"
        (should (equal (string-to-number value) (point))))
       ("column"
        (should (equal (string-to-number value) (current-column))))
-      ("indent"
-       (should (equal (string-to-number value) (current-indentation))))
       ("line"
        (should (equal (string-to-number value) (line-number-at-pos)))))))
+
+(Then (rx (group "expect " (+ any)) " at indent + " (group (+ digit)))
+  (lambda (prefix value)
+    (Then (format "%s at %s" prefix (+ (current-indentation)
+                                       (string-to-number value))))))
+
+(Then (rx "expect indent level " (group (+ digit)))
+  (lambda (value)
+    (should (equal (* haxe-mode-indent-level
+                      (string-to-number value))
+                   (current-indentation)))))
