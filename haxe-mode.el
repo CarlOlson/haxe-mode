@@ -64,16 +64,25 @@
   "Font lock configuration for ‘haxe-mode’.")
 
 (defun haxe-indent-line ()
-  "Indent current line of Sample code."
+  "Indent current line of code."
   (interactive)
   (save-excursion
     (back-to-indentation)
     (unless (haxe-comment-or-string)
-      (indent-line-to (* haxe-mode-indent-level
-                         (+ (syntax-ppss-depth (syntax-ppss))
-                            (if (looking-at (rx "}")) -1 0))))))
-  (when (> (current-indentation) (current-column))
-    (move-to-column (current-indentation))))
+      (haxe-perform-indent)))
+  (when (haxe-is-before-indent)
+    (haxe-move-to-indent)))
+
+(defun haxe-perform-indent ()
+  (indent-line-to (* haxe-mode-indent-level
+                     (+ (syntax-ppss-depth (syntax-ppss))
+                        (if (looking-at (rx "}")) -1 0)))))
+
+(defun haxe-move-to-indent ()
+  (move-to-column (current-indentation)))
+
+(defun haxe-is-before-indent ()
+  (> (current-indentation) (current-column)))
 
 (defun haxe-comment-or-string ()
   "Is point in a comment or string?"
