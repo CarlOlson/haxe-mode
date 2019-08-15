@@ -10,18 +10,20 @@ import hx.sys;
 
 @:allow(MainTest)
 class Main {
-  var single:String = 'single';
-  var double:String = "double";
-  var regexp:EReg   = ~/world/;
+	var single:String = 'single';
+	var double:String = "double";
+	var regexp:EReg   = ~/world/;
 
-  function main():Void {
-    #if debug
-    trace("hello, world");
-    #end
+	function main():Void {
+		#if debug
+		trace("hello, world");
+		#end
 
-    var map = [1 => 101, 2 => 102, 3 => 103];
-    for (key => value in map) {
-      trace(key, value);
-    }
-  }
+		eoueutest(2, 3, 3)
+
+		var map = [1 => 101, 2 => 102, 3 => 103];
+		for (key => value in map) {
+			trace(key, value);
+		}
+	}
 }

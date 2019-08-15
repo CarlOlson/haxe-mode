@@ -18,9 +18,15 @@
 
 ;;; Code:
 
-(defcustom haxe-mode-indent-level 2
-  "Number of spaces per indent level for ‘haxe-mode’."
+(defcustom haxe-mode-indent-level 4
+  "Number of spaces per indent level for ‘haxe-mode’.
+`tab-width' is set to this value."
   :type 'integer
+  :group 'haxe)
+
+(defcustom haxe-mode-indent-tabs-mode t
+  "Sets `indent-tabs-mode' locally if true."
+  :type 'boolean
   :group 'haxe)
 
 (defvar haxe-mode-syntax-table
@@ -80,7 +86,9 @@
   (setq-local comment-start "// ")
   (setq-local comment-start-skip (rx "//" (* (or "//" whitespace))))
   (setq-local indent-line-function #'haxe-indent-line)
-  (setq-local font-lock-defaults '(haxe-mode-font-lock-keywords)))
+  (setq-local font-lock-defaults '(haxe-mode-font-lock-keywords))
+  (setq-local indent-tabs-mode haxe-mode-indent-tabs-mode)
+  (setq-local tab-width haxe-mode-indent-level))
 
 ;;;###autoload
 (add-to-list 'auto-mode-alist `(,(rx ".hx" eol) . haxe-mode))
