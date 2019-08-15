@@ -17,14 +17,14 @@ Feature: Indentation
     }
     """
     When I indent at line 2
-    Then expect indent to 2
+    Then expect indent to 4
 
   Scenario: Closing block
     Given I am in a haxe buffer
     And I insert
     """
     class Main {
-      var name:String;
+        var name:String;
     }
     """
     When I indent at line 3
@@ -39,7 +39,7 @@ Feature: Indentation
 
     """
     When I indent at line 3
-    Then expect indent to 4
+    Then expect indent to 8
 
   Scenario: Multiline comments
     # Leave multiline comments alone for now
@@ -47,11 +47,11 @@ Feature: Indentation
     And I insert
     """
     class Main {
-      /* bad indent below
-      */
+        /* bad indent below
+        */
     """
     When I indent at line 3
-    Then expect indent to 2
+    Then expect indent to 4
 
   Scenario: Reindent after indention
     Given I am in a haxe buffer
@@ -61,7 +61,7 @@ Feature: Indentation
     // comment
     """
     When at line 2
-    And I indent at column 4
+    And I indent at column 2
     Then expect column at 6
 
   Scenario: Reindent before indention
@@ -73,4 +73,4 @@ Feature: Indentation
     """
     When at line 2
     And I indent at column 1
-    Then expect column at 2
+    Then expect column at 4
