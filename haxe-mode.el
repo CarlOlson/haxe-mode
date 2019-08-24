@@ -42,7 +42,7 @@
 (defvar haxe-mode-font-lock-keywords
   (let* ((keywords '(abstract cast class dynamic enum extends
                      extern false final final function implements
-                     import in inline interface macro new null
+                     import using in inline interface macro new null
                      operator overload override package public
                      static this true typedef untyped var))
          (controls '(break case catch continue default do else
